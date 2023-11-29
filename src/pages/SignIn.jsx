@@ -10,11 +10,11 @@ import { loginUser } from "../features/user/userSlice";
 import Button from "../components/UI/Button";
 import { getUserFromLocalStorage } from "../utils/localStorage";
 const SignIn = () => {
-  const navigate = useNavigate()
-  const dispatch =useDispatch()
-  const {user, isLoading} = useSelector((state) => state.user)
-  const [isLocalUser, setIsLocalUser] = useState(false)
-  
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { user, isLoading } = useSelector((state) => state.user);
+  const [isLocalUser, setIsLocalUser] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -22,42 +22,28 @@ const SignIn = () => {
   } = useForm();
 
   const checkLocalUser = () => {
-    let getLocalUser = getUserFromLocalStorage()
-    return getLocalUser ? setIsLocalUser(true) : setIsLocalUser(false)
-  }
-
-
-  // useEffect(()=> {
-  //   checkLocalUser()
-  //   if(isLocalUser){
-  //     navigate('/admin')
-  //   }
-  // },[checkLocalUser])
+    let getLocalUser = getUserFromLocalStorage();
+    return getLocalUser ? setIsLocalUser(true) : setIsLocalUser(false);
+  };
 
   useEffect(() => {
-    if(user) {
+    if (user) {
       setTimeout(() => {
-        navigate('/admin')
+        navigate("/admin");
       }, 3000);
     }
-
-  })
+  });
 
   //On Form Submission
   const onFormSubmit = (data) => {
-   
-    debugger
-    console.log(data)
-    dispatch(loginUser(data))
-    // checkLocalUser()
-    
-    // navigate('/admin')
+    console.log(data);
+    dispatch(loginUser(data));
   };
 
   const handleChange = () => {};
   return (
     <>
-     <ToastContainer />
+      <ToastContainer />
       <div className="grid place-items-center h-screen w-screen bg-slate-50">
         <div className="py-5 px-7 bg-white shadow-sm rounded-md w-[400px] h-auto border">
           <p className="text-slate-500 text-center font-bold">Welcome Back !</p>
@@ -70,6 +56,7 @@ const SignIn = () => {
                 type="email"
                 name="email"
                 classname="input"
+                isRequired = "true"
                 handleChange={handleChange}
                 labelText="Email"
                 register={register}
@@ -80,6 +67,7 @@ const SignIn = () => {
                 type="password"
                 name="password"
                 classname="input"
+                isRequired = "true"
                 handleChange={handleChange}
                 labelText="Password"
                 register={register}
@@ -101,17 +89,12 @@ const SignIn = () => {
                   Remember me
                 </label>
               </div>
-              
-                {/* <button
-                  type="submit"
-                  className="primary-btn font-medium rounded-sm text-sm  py-3 mr-2 mb-2  w-full my-4"
-                >
-                  Sign In
-                </button> */}
-                <Button type='submit'
-                label={isLoading ? 'Loading...' : 'Sign In'}
-                classname='primary-btn font-medium rounded-sm text-sm  py-3 mr-2 mb-2  w-full my-4'/>
-              
+
+              <Button
+                type="submit"
+                label={isLoading ? "Loading..." : "Sign In"}
+                classname="primary-btn font-medium rounded-sm text-sm  py-3 mr-2 mb-2  w-full my-4"
+              />
             </form>
 
             <div

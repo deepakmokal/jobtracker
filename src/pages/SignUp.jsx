@@ -45,6 +45,7 @@ const SignUp = () => {
                 name="email"
                 classname="input"
                 handleChange={handleChange}
+                isRequired = "true"
                 labelText="Email"
                 register={register}
                 errors={errors}
@@ -56,6 +57,7 @@ const SignUp = () => {
                 name="name"
                 classname="input"
                 handleChange={handleChange}
+                isRequired = "true"
                 labelText="Username"
                 register={register}
                 errors={errors}
@@ -67,18 +69,13 @@ const SignUp = () => {
                 name="password"
                 classname="input"
                 handleChange={handleChange}
+                isRequired = "true"
                 labelText="Password"
                 register={register}
                 errors={errors}
                 placeholder="Enter Password"
               />
 
-              {/* <button
-                type="submit"
-                className="primary-btn font-medium rounded-sm text-sm  py-3 mr-2 mb-2  w-full my-4"
-              >
-                Sign Up
-              </button> */}
               <Button
                 type="submit"
                 classname="primary-btn font-medium rounded-sm text-sm  py-3 mr-2 mb-2  w-full my-4"

@@ -1,4 +1,4 @@
-import React, {  useState } from "react";
+import React, {  useEffect, useState } from "react";
 import { EyeClose, EyeOpen } from "../../icons";
 
 import { toast } from "react-toastify";
@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 const FormRow = ({
   type,
   name,
+  isRequired,
   classname,
   handleChange,
   labelText,
@@ -14,7 +15,7 @@ const FormRow = ({
   errors,
   ...rest
 }) => {
-  
+  const [requiredField, setRequiredField] = useState(false)
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const showToast = (message, type) => {
@@ -24,6 +25,17 @@ const FormRow = ({
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
+  useEffect(() => {
+    if(isRequired=== 'true') {
+      setRequiredField(true)
+    }
+    else {
+      setRequiredField(false)
+    }
+  })
+
+  
 
   
 
@@ -44,7 +56,7 @@ const FormRow = ({
             </div>
             <input
               type={showPassword ? "text" : "password"}
-              {...register(name, { required: true })}
+              {...register(name, {  required: requiredField})}
               onChange={(e) => setPassword(e.target.value)}
               className={classname}
               {...rest}
@@ -54,7 +66,7 @@ const FormRow = ({
         ) : (
           <input
             className={classname}
-            {...register(name, { required: true })}
+            {...register(name, { required: requiredField })}
             name={name}
             type={type}
             onChange={handleChange}

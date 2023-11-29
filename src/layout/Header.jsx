@@ -29,7 +29,7 @@ export const Header = () => {
     toast(`Logging out ${userName}...`);
     removeUserFromLocalStorage();
     setTimeout(() => {
-      navigate("/login");  
+      navigate("/");  
     }, 3000);
     
   };

@@ -1,122 +1,118 @@
-import React from "react";
-import Card from "../components/UI/Card";
-import FormTitle from "../components/UI/FormTitle";
-import FormRow from "../components/UI/FormRow";
-import DropdownHOC from "../components/UI/DropdownHOC";
-import Dropdown from "../components/UI/Dropdown";
-import JobCard from "../components/UI/JobCard";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import Button from "../components/UI/Button";
-
+import Card from "../components/UI/Card";
+import FormRow from "../components/UI/FormRow";
+import FormTitle from "../components/UI/FormTitle";
+import JobCard from "../components/UI/JobCard";
+import SelectDropdown from "../components/UI/SelectDropdown";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAllJobs } from "../features/jobs/jobsSlice";
+import Loader from '../components/UI/Loader'
 
 const AllJobs = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm();
-  const statusOptions = ["Interview", "Pending", "Declined"];
-  const jobtypeOptions = ["Full-time", "Part-time", "Remote", "Internship"];
-  const sortOptions = ["Latest", "Oldest", "a-z", "z-a"];
-
-  const StatusDropdown = DropdownHOC(
-    Dropdown,
-    "Select Status",
-    statusOptions,
-    "Status"
-  );
-  const JobTypeDropdown = DropdownHOC(
-    Dropdown,
-    "Select Job Type",
-    jobtypeOptions,
-    "Type"
-  );
-  const SortDropdown = DropdownHOC(Dropdown, "Sort By", sortOptions, "Type");
-
+  const statusOptions = ["interview", "pending", "declined"];
+  const jobtypeOptions = ["full-time", "part-time", "remote", "internship"];
+  const sortOptions = ["latest", "oldest", "a-z", "z-a"];
+  const { jobs, isLoading } = useSelector((state) => state.jobs);
   const handleChange = () => {};
+  const dispatch = useDispatch();
+
+  const onJobFetch = (data) => {
+    console.log(data)
+    dispatch(fetchAllJobs(data))
+  };
+
+  useEffect(() => {
+    debugger;
+    dispatch(fetchAllJobs({sort:'all', status:'all',jobType: 'all'}));
+  }, []);
+
+  
+  const allJobs = jobs.jobs
+  
+  if(isLoading) return <Loader/>
+  
   return (
+    
     <>
       <Card>
         <FormTitle>Add Jobs</FormTitle>
-        <div className="grid grid-cols-3 gap-4">
-          <FormRow
-            type="text"
-            name="search"
-            register={register}
-            errors = {errors}
-            classname="input"
-            labelText="Search"
-            onChange={handleChange}
-          />
+        <form action="" onSubmit={handleSubmit(onJobFetch)}>
+          <div className="grid grid-cols-3 gap-4">
+            <FormRow
+              type="text"
+              name="search"
+              isRequired = "false"
+              register={register}
+              errors={errors}
+              classname="input"
+              labelText="Search"
+              onChange={handleChange}
+            />
 
-          <StatusDropdown />
+            <SelectDropdown
+              options={statusOptions}
+              name="status"
+              label="Status"
+              register={register}
+              errors={errors}
+            />
+            <SelectDropdown
+              options={jobtypeOptions}
+              name="jobType"
+              label="Job Type"
+              register={register}
+              errors={errors}
+              
+            />
 
-          <JobTypeDropdown />
+            <SelectDropdown
+              options={sortOptions}
+              name="sort"
+              label="Sort Type"
+              register={register}
+              errors={errors}
+            />
 
-          <SortDropdown />
-
-          <div className="action flex gap-2  items-end">
-            {/* <button className="secondary-btn w-1/2">Clear</button>
-            <button className="primary-btn w-1/2">Submit</button> */}
-
-            <Button
-            type='button'
-            classname='secondary-btn w-1/2'
-            label='Clear' />
-            <Button 
-            type='button'
-            classname='primary-btn w-1/2'
-            label='Submit' />
+            <div className="action flex gap-2  items-end">
+              <Button
+                type="reset"
+                classname="secondary-btn w-1/2"
+                label="Clear"
+              />
+              <Button
+                type="submit"
+                classname="primary-btn w-1/2"
+                label="Submit"
+              />
+            </div>
           </div>
-        </div>
+        </form>
       </Card>
 
-      <div className="grid grid-cols-3 gap-4">
-        <JobCard 
-        position='Accounting Assistant III'
-        company='Kunze And Sons'
-        status='Interview'
-        location='Kafr Mandā'
-        jobtype='Remote'
-        date='Dec 22nd, 2021'/>
+      
+    <div className="grid grid-cols-3 gap-4">
+    {allJobs.map((job, key) => (
+        <JobCard key={job._id}
+        position={job.position}
+        company={job.company}
+        status={job.status}
+        location={job.jobLocation}
+        jobtype={job.jobType}
+        date={job.updatedAt}
+      />
+      ))}
+    </div>
+      
 
-        <JobCard 
-        position='Environmental Tech'
-        company='Cremin LLC'
-        status='Declined'
-        location='Meixian'
-        jobtype='Full-Time'
-        date='Dec 10th, 2021'
-        />
-
-        <JobCard 
-        position='Civil Engineer' 
-        company='Bechtelar-Bednar'
-        status='Declined'
-        location='Kiamba'
-        jobtype='Internship'
-        date='Dec 27th, 2021'
-        />
-        
-        <JobCard 
-        position='Actuary'
-        company='Klocko And Sons'
-        status='Pending'
-        location='Dianfang'
-        jobtype='Full-Time'
-        date='Dec 9th, 2021'
-        />
-
-        <JobCard 
-        position='Pharmacist'
-        company='Schimmel, Beahan And Baumbach'
-        status='Interview'
-        location='Jakhaly'
-        jobtype='Internship'
-        date='Oct 21st, 2021'
-        />
-        
-      </div>
+    
     </>
   );
 };
